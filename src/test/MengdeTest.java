@@ -6,102 +6,89 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import mengde.JavaSetToMengde;
+import mengde.LenketMengde;
 import mengde.MengdeADT;
 import mengde.TabellMengde;
 
 class MengdeTest {
 
-	  private TabellMengde<Integer> mengde1;
-	    private TabellMengde<Integer> mengde2;
-	    private TabellMengde<Integer> tomMengde;
+	  
+    private MengdeADT<Integer> tabellMengde;
+    private MengdeADT<Integer> lenketMengde;
+    private MengdeADT<Integer> javaSetMengde;
 
-	    @BeforeEach
-	    void setUp() {
-	        mengde1 = new TabellMengde<>();
-	        mengde2 = new TabellMengde<>();
-	        tomMengde = new TabellMengde<>();
+    @BeforeEach
+    void setUp() {
+        tabellMengde = new TabellMengde<>();
+        lenketMengde = new LenketMengde<>();
+        javaSetMengde = new JavaSetToMengde<>();
+    }
 
-	        mengde1.leggTil(1);
-	        mengde1.leggTil(2);
-	        mengde1.leggTil(3);
+    @Test
+    void testErTom() {
+        assertTrue(tabellMengde.erTom());
+        assertTrue(lenketMengde.erTom());
+        assertTrue(javaSetMengde.erTom());
+    }
 
-	        mengde2.leggTil(3);
-	        mengde2.leggTil(4);
-	        mengde2.leggTil(5);
-	    }
+    @Test
+    void testLeggTilOgInneholder() {
+        tabellMengde.leggTil(1);
+        lenketMengde.leggTil(1);
+        javaSetMengde.leggTil(1);
 
-	    @Test
-	    void testErTom() {
-	        assertTrue(tomMengde.erTom());
-	        assertFalse(mengde1.erTom());
-	    }
+        assertTrue(tabellMengde.inneholder(1));
+        assertTrue(lenketMengde.inneholder(1));
+        assertTrue(javaSetMengde.inneholder(1));
+    }
 
-	    @Test
-	    void testInneholder() {
-	        assertTrue(mengde1.inneholder(1));
-	        assertFalse(mengde1.inneholder(4));
-	    }
+    @Test
+    void testFjern() {
+        tabellMengde.leggTil(2);
+        lenketMengde.leggTil(2);
+        javaSetMengde.leggTil(2);
 
-	    @Test
-	    void testErDelmengdeAv() {
-	        TabellMengde<Integer> mengde3 = new TabellMengde<>();
-	        mengde3.leggTil(1);
-	        mengde3.leggTil(2);
+        assertEquals(2, tabellMengde.fjern(2));
+        assertEquals(2, lenketMengde.fjern(2));
+        assertEquals(2, javaSetMengde.fjern(2));
 
-	        assertTrue(mengde3.erDelmengdeAv(mengde1));
-	        assertFalse(mengde1.erDelmengdeAv(mengde2));
-	    }
+        assertFalse(tabellMengde.inneholder(2));
+        assertFalse(lenketMengde.inneholder(2));
+        assertFalse(javaSetMengde.inneholder(2));
+    }
 
-	    @Test
-	    void testErLik() {
-	        TabellMengde<Integer> mengde3 = new TabellMengde<>();
-	        mengde3.leggTil(1);
-	        mengde3.leggTil(2);
-	        mengde3.leggTil(3);
+    @Test
+    void testUnion() {
+        tabellMengde.leggTil(1);
+        lenketMengde.leggTil(1);
+        javaSetMengde.leggTil(1);
 
-	        assertTrue(mengde1.erLik(mengde3));
-	        assertFalse(mengde1.erLik(mengde2));
-	    }
+        MengdeADT<Integer> unionTabell = tabellMengde.union(lenketMengde);
+        MengdeADT<Integer> unionLenket = lenketMengde.union(javaSetMengde);
+        MengdeADT<Integer> unionSet = javaSetMengde.union(tabellMengde);
 
-	    @Test
-	    void testErDisjunkt() {
-	        assertTrue(mengde1.erDisjunkt(tomMengde));
-	        assertFalse(mengde1.erDisjunkt(mengde2));
-	    }
+        assertTrue(unionTabell.inneholder(1));
+        assertTrue(unionLenket.inneholder(1));
+        assertTrue(unionSet.inneholder(1));
+    }
 
-	    @Test
-	    void testSnitt() {
-	        MengdeADT<Integer> snitt = mengde1.snitt(mengde2);
-	        assertTrue(snitt.inneholder(3));
-	        assertFalse(snitt.inneholder(1));
-	        assertFalse(snitt.inneholder(4));
-	    }
+    @Test
+    void testSnitt() {
+        tabellMengde.leggTil(3);
+        tabellMengde.leggTil(4);
+        lenketMengde.leggTil(4);
+        javaSetMengde.leggTil(4);
+        javaSetMengde.leggTil(5);
 
-	    @Test
-	    void testUnion() {
-	        MengdeADT<Integer> union = mengde1.union(mengde2);
-	        assertTrue(union.inneholder(1));
-	        assertTrue(union.inneholder(2));
-	        assertTrue(union.inneholder(3));
-	        assertTrue(union.inneholder(4));
-	        assertTrue(union.inneholder(5));
-	        assertEquals(5, union.antallElementer());
-	    }
+        MengdeADT<Integer> snittTabell = tabellMengde.snitt(javaSetMengde);
+        MengdeADT<Integer> snittLenket = lenketMengde.snitt(javaSetMengde);
+        MengdeADT<Integer> snittSet = javaSetMengde.snitt(tabellMengde);
 
-	    @Test
-	    void testMinus() {
-	        MengdeADT<Integer> diff = mengde1.minus(mengde2);
-	        assertTrue(diff.inneholder(1));
-	        assertTrue(diff.inneholder(2));
-	        assertFalse(diff.inneholder(3));
-	    }
-
-	    @Test
-	    void testLeggTilOgFjern() {
-	        mengde1.leggTil(10);
-	        assertTrue(mengde1.inneholder(10));
-	        
-	        mengde1.fjern(10);
-	        assertFalse(mengde1.inneholder(10));
-	    }
-	}
+        assertTrue(snittTabell.inneholder(4));
+        assertTrue(snittLenket.inneholder(4));
+        assertTrue(snittSet.inneholder(4));
+        assertFalse(snittTabell.inneholder(3));
+        assertFalse(snittSet.inneholder(5));
+    }
+}
