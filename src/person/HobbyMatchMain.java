@@ -6,13 +6,13 @@ import java.util.Set;
 public class HobbyMatchMain {
 	public static double match(Person a, Person b) {
 	    Set<String> felles = new HashSet<>(a.getHobbyer());
-	    felles.retainAll(b.getHobbyer()); // Finn felles hobbyer
+	    felles.retainAll(b.getHobbyer()); // 
 
 	    Set<String> kunHosA = new HashSet<>(a.getHobbyer());
-	    kunHosA.removeAll(b.getHobbyer()); // Hobbyer kun hos A
+	    kunHosA.removeAll(b.getHobbyer()); 
 
 	    Set<String> kunHosB = new HashSet<>(b.getHobbyer());
-	    kunHosB.removeAll(a.getHobbyer()); // Hobbyer kun hos B
+	    kunHosB.removeAll(a.getHobbyer());
 
 	    int antallFelles = felles.size();
 	    int antallKunHosDenEne = kunHosA.size();
@@ -20,7 +20,7 @@ public class HobbyMatchMain {
 	    int antallTotalt = a.getHobbyer().size() + b.getHobbyer().size();
 
 	    if (antallTotalt == 0) {
-	        return 1.0; // Hvis begge har null hobbyer, skal de være perfekt match
+	        return 1.0; 
 	    }
 
 	    return (antallFelles - (antallKunHosDenEne + antallKunHosDenAndre)) / (double) antallTotalt;
